@@ -31,3 +31,18 @@
 //To get all the publications ===>Done
 //To get a specific publication ===>Done
 //To get a list of publications based on a book ===>Done
+
+
+//POST REQUEST
+//1.add new book ===>Done
+//2.add new publication ===>Done
+//3.add new author ===>Done
+
+// ***********PUT***********
+//1.Update book details if author is changed ===>Done
+
+
+// ***********DELETE***********
+//1.Delete a book   ===>Done
+//2.Delete a author from book  ===>Done
+//3.Delete author from book and relatedbook from author
