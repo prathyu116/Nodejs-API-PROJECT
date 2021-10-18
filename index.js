@@ -15,7 +15,7 @@ booky.use(bodyParser.urlencoded({ extended: true }))
 booky.use(bodyParser.json());
 
 //DB Connection
- mongoose.connect(process.env.MONGO_URL).then(()=>console.log("connection established"))
+ mongoose.connect(process.env.MONGO_URL).then(()=>console.log("connection established"));
 
 
 /**
@@ -127,7 +127,7 @@ booky.get('/author/book/:isbn', async(req, res) => {
  * Acces        public
  */
 
-booky.get('/publication',async (req, res) => {
+booky.get('/publications',async (req, res) => {
     const getAllPublication = await PublicationModel.find();
     return res.json(getAllPublication);
 })
@@ -204,6 +204,61 @@ booky.post("/publicaion/new", (req, res) => {
 
 
 })
+/***********PUT************/
+/**  
+ * Route         /publicaion/update/book
+ * Description  update book on isbn
+ * Parameter    isbn
+ * Method       put
+ * Acces        public
+ */
+
+booky.put("/book/update/:isbn",async(req,res)=>{
+    const updatedBook = await BookModel.findOneAndUpdate(
+        {ISBN:req.params.isbn},
+        {title:req.body.bookTitle},
+        {new:true}
+    );
+    return res.json({
+        books: updatedBook
+    })
+
+});
+/**********UPDATING NEW AUTHOR***********/
+/**  
+ * Route         /book/author/update
+ * Description  update or add new book on isbn
+ * Parameter    isbn
+ * Method       put
+ * Acces        public
+ */
+
+
+booky.put("/book/author/update/:isbn",async(req,res)=>{
+     //update the book database
+     const updatedBook = await BookModel.findOneAndUpdate(
+        { ISBN: req.params.isbn },
+        {
+            $addToSet:
+                { author: req.body.newAuthor },
+        },
+        { new: true, }
+
+    );
+    //update the author database
+    const updatedAuthor = await AuthorModel.findOneAndUpdate(
+        { id: req.body.newAuthor },
+        {
+            $addToSet: { books: req.params.isbn},
+        },
+        { new: true }
+    );
+    return res.json({ books: updatedBook, authors: updatedAuthor, message: "New author was added" });
+
+})
+
+
+
 
 /**  PUT
  * Route         /publicaion/update/book
@@ -250,17 +305,14 @@ booky.put("/publication/update/book/:isbn", (req, res) => {
  * Method       delete
  * Acces        public
  */
-booky.delete("/book/delete/:isbn", (req, res) => {
-    const updatedBook = database.books.filter(
-        (book) => book.ISBN !== req.params.isbn
-    )
-    database.books = updatedBook;
-    return res.json(
-        {
-            books: database.books
-        }
-    )
-})
+booky.delete("/book/delete/:isbn", async(req, res) => {
+   const updatedBookDB = await BookModel.findOneAndDelete(
+       {
+           ISBN:req.params.isbn
+       }
+   );
+   return res.json({books:updatedBookDB})
+});
 /**   
  * Route         /author/delete
  * Description  delete author

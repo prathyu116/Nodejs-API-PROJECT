@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 //Creating a author schema
 const AuthorSchema = mongoose.Schema({
 

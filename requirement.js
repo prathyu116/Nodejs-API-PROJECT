@@ -45,7 +45,7 @@
 // ***********DELETE***********
 //1.Delete a book   ===>Done
 //2.Delete a author from book  ===>Done
-//3.Delete author from book and relatedbook from author
+//3.Delete author from book and relatedbook from author ==>DoNE
 
 
 //Schema -Blueprint of how data to be constrcted===[with type]
